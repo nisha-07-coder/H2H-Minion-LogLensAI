@@ -1,8 +1,9 @@
 # H2H-Minion++-LogLensAI
 ## AI Incident Assistant for Network Logs
 ## Team Name : Minion++
-Team Members : NiKath Jahan and Nisha S
-Problem Statement
+Team Members : Nikath Jahan and Nisha S
+
+## Problem Statement
 AI-Powered Network Log Translator
 ## Project Brief
 LogLens AI is an intelligent system that converts complex network logs (Syslog, SNMP, VPC Flow Logs) into structured data and translates them into human-readable insights.
