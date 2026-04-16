@@ -135,10 +135,13 @@ User-Friendly Output (Dashboard)
 
 ## Input Logs:
 
-*-Login failed
-*-Login failed
-*-Login failed
-*-Port scan detected
+-Login failed
+
+-Login failed
+
+-Login failed
+
+-Port scan detected
 
 
 ### Output:
