@@ -186,9 +186,7 @@ H2H-Minion-LogLensAI/
 │   └── architecture.png
 │
 ├── requirements.txt
-└── README.md
-
----
+└── README.md---
 
 ## 🚧 Current Status
 
