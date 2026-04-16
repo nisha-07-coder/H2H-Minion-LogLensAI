@@ -133,12 +133,12 @@ User-Friendly Output (Dashboard)
 
 ## 🔍 Example
 
-### Input Logs:
+## Input Logs:
 
-Login failed
-Login failed
-Login failed
-Port scan detected
+*-Login failed
+*-Login failed
+*-Login failed
+*-Port scan detected
 
 
 ### Output:
