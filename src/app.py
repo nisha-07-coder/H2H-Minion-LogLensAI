@@ -8,6 +8,7 @@ from anomaly import detect_anomalies
 from incident import correlate_incidents
 from translator import translate_anomalies
 from ip_intelligence import enrich_logs
+from ai_chat import generate_response   # ✅ correct import
 
 # ------------------ PAGE CONFIG ------------------
 st.set_page_config(page_title="LogLens AI", layout="wide")
@@ -22,11 +23,24 @@ body {
     padding-top: 2rem;
 }
 .metric-box {
-    background: #1c1f26;
+    background: linear-gradient(135deg, #1c1f26, #2c313c);
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 12px;
     text-align: center;
     color: white;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.4);
+}
+.chat-user {
+    background: #2c313c;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px 0;
+}
+.chat-ai {
+    background: #1c1f26;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px 0;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -53,7 +67,7 @@ insights = translate_anomalies(anomalies)
 
 df = pd.DataFrame(logs)
 
-# ------------------ METRICS (CARDS STYLE) ------------------
+# ------------------ METRICS ------------------
 st.markdown("## 📊 Overview")
 
 col1, col2, col3 = st.columns(3)
@@ -90,24 +104,34 @@ st.dataframe(df, use_container_width=True)
 
 st.divider()
 
-# ------------------ TWO COLUMN LAYOUT ------------------
+# ------------------ ANOMALIES + INCIDENTS ------------------
 col1, col2 = st.columns(2)
 
-# -------- ANOMALIES --------
 with col1:
     st.markdown("## 🚨 Anomalies")
     if anomalies:
         for a in anomalies:
-            st.error(f"**{a['type']}**\n\nIP: {a['ip']}\n\n{a['detail']}")
+            st.error(f"""
+**{a['type']}**
+
+IP: {a['ip']}
+
+{a['detail']}
+""")
     else:
         st.success("No anomalies detected")
 
-# -------- INCIDENTS --------
 with col2:
     st.markdown("## 🔗 Incidents")
     if incidents:
         for i in incidents:
-            st.warning(f"**{i['incident']}**\n\nIP: {i['ip']}\n\n{i['detail']}")
+            st.warning(f"""
+**{i['incident']}**
+
+IP: {i['ip']}
+
+{i['detail']}
+""")
     else:
         st.success("No incidents detected")
 
@@ -148,16 +172,17 @@ with col2:
 st.divider()
 
 # ------------------ CHAT ------------------
-st.markdown("## 💬 Chat Assistant")
+st.markdown("## 💬 AI Chat Assistant")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Display chat
 for role, msg in st.session_state.messages:
     if role == "user":
-        st.markdown(f"🧑 **You:** {msg}")
+        st.markdown(f'<div class="chat-user">🧑 {msg}</div>', unsafe_allow_html=True)
     else:
-        st.markdown(f"🤖 **AI:** {msg}")
+        st.markdown(f'<div class="chat-ai">🤖 {msg}</div>', unsafe_allow_html=True)
 
 user_input = st.text_input("Ask about logs...")
 
@@ -165,18 +190,8 @@ if st.button("Send"):
     if user_input:
         st.session_state.messages.append(("user", user_input))
 
-        if "ip" in user_input.lower():
-            ips = set([log["source_ip"] for log in logs])
-            response = f"Detected IPs: {', '.join(ips)}"
-
-        elif "anomaly" in user_input.lower():
-            response = str(anomalies)
-
-        elif "incident" in user_input.lower():
-            response = str(incidents)
-
-        else:
-            response = "Ask about logs, anomalies, or incidents."
+        # ✅ correct usage
+        response = generate_response(user_input, logs, anomalies, incidents)
 
         st.session_state.messages.append(("assistant", response))
 
@@ -185,5 +200,5 @@ st.divider()
 # ------------------ FOOTER ------------------
 st.markdown("""
 ---
-🔐 **LogLens AI** 
+🔐 **LogLens AI** | Built for Cybersecurity Analysis
 """)
