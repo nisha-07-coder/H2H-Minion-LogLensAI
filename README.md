@@ -1,39 +1,50 @@
-# 🚀 LogLens AI
+# 🚀 LogLens AI  
+### 🧠 From Raw Logs to Smart Security Intelligence
 
-### From Raw Logs to Smart Decisions
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Streamlit-Dashboard-red?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/AI-Powered-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge" />
+</p>
 
 ---
 
 ## 📌 Overview
 
-**LogLens AI** is an AI-powered cybersecurity tool that transforms raw network logs into **human-readable insights, correlated incidents, and actionable recommendations**.
+**LogLens AI** is an intelligent cybersecurity platform that transforms raw network logs into:
 
-It helps reduce incident response time by converting complex logs into **clear security intelligence**.
+- 📊 Structured data  
+- 🚨 Detected threats  
+- 🔗 Correlated incidents  
+- 🧠 Human-readable insights  
+
+It acts like a **virtual SOC analyst**, helping security teams understand threats faster and respond smarter.
 
 ---
 
 ## 🎯 Problem Statement
 
-Modern systems generate massive volumes of logs that are:
+Modern systems generate huge volumes of logs that are:
 
-* ❌ Difficult to understand
-* ⏳ Time-consuming to analyze
-* 🧠 Hard for beginners and tiring for experts
+- ❌ Complex and unstructured  
+- ⏳ Time-consuming to analyze  
+- 🧠 Difficult to interpret  
 
-➡️ Result: **Delayed threat detection and slow incident response**
+➡️ Result: **Delayed threat detection & slow incident response**
 
 ---
 
 ## 💡 Solution
 
-LogLens AI acts like a **virtual SOC analyst** by:
+LogLens AI simplifies log analysis by:
 
-* 🔍 Parsing raw logs into structured data
-* 🚨 Detecting anomalies (brute force, port scan)
-* 🏷️ Classifying severity levels
-* 🔗 Correlating events into incidents
-* 🧠 Generating AI-based explanations
-* 💡 Providing actionable recommendations
+- 🔍 Parsing raw logs  
+- 🚨 Detecting anomalies  
+- 🏷️ Classifying severity  
+- 🔗 Correlating incidents  
+- 🧠 Translating logs into plain English  
+- 💡 Providing actionable recommendations  
 
 ---
 
@@ -46,15 +57,15 @@ Log Parsing (Regex)
    ↓
 Structured Data (JSON)
    ↓
-Anomaly Detection
+Classification Engine
    ↓
-Log Classification
+Anomaly Detection
    ↓
 Incident Correlation
    ↓
-AI Explanation Engine
+AI Insight Generator
    ↓
-Dashboard Output (Streamlit)
+Streamlit Dashboard
 ```
 
 ---
@@ -62,70 +73,60 @@ Dashboard Output (Streamlit)
 ## 🔥 Features
 
 ### 🔍 Log Parsing
-
-* Extracts:
-
-  * Source IP
-  * Port
-  * Action
-  * Timestamp
+- Extracts IP, Port, Action, Timestamp  
+- Converts raw logs → structured format  
 
 ---
 
 ### 🚨 Anomaly Detection
-
 Detects:
-
-* Brute-force attacks
-* Port scanning
-* Suspicious patterns
+- Brute Force Attacks  
+- Port Scanning  
+- Suspicious Patterns  
 
 ---
 
 ### 🔗 Incident Correlation
+Combines multiple events into **attack stories**
 
-Combines multiple logs into **attack stories**
-
-Example:
-
-> Multiple failed logins + multiple ports accessed → Coordinated attack
+> Example:  
+> Failed logins + multi-port access → **Coordinated attack**
 
 ---
 
-### 🧠 AI Insights
+### 🧠 AI Log Translator
+Transforms logs into human language:
 
-Example output:
-
-> “Multiple failed SSH login attempts followed by port scanning indicate a potential brute-force attack.”
-
----
-
-### 💡 Recommendations
-
-* Block malicious IP
-* Restrict access
-* Enable firewall rules
+> “Multiple failed login attempts detected → Possible brute-force attack.”
 
 ---
 
-### 📊 Dashboard
-
-* Real-time metrics
-* Charts (port usage, severity)
-* Visual alerts
-* Structured logs
+### 💡 Recommendations Engine
+- Block malicious IP  
+- Restrict ports  
+- Monitor suspicious activity  
 
 ---
 
+### 📊 Interactive Dashboard
+- KPI cards (Logs, Anomalies, Incidents)  
+- Threat level indicator 🔥  
+- Attack timeline  
+- Charts & analytics  
+- Chat-based assistant  
+
+---
 
 ## ⚙️ Tech Stack
 
-* 🐍 Python
-* 📊 Pandas
-* 🔍 Regex
-* 🤖 LLM (AI explanations)
-* 🌐 Streamlit (UI Dashboard)
-* 🧠 Scikit-learn (optional ML)
+| Layer        | Technology |
+|-------------|------------|
+| Backend      | Python |
+| Data         | Pandas |
+| Parsing      | Regex |
+| UI           | Streamlit |
+| AI Layer     | Rule-based / LLM-ready |
+| ML (Optional)| Scikit-learn |
 
 ---
 
@@ -134,7 +135,7 @@ Example output:
 ```
 H2H-Minion-LogLensAI/
 
-├── Data/
+├── data/
 │   └── sample_logs.txt
 │
 ├── src/
@@ -144,10 +145,13 @@ H2H-Minion-LogLensAI/
 │   ├── anomaly.py
 │   ├── incident.py
 │   ├── explainer.py
-│   └── ip_intelligence.py
+│   ├── ip_intelligence.py
+│   ├── ip_geo.py
+│   └── ai_chat.py
 │
 ├── requirements.txt
-└── README.md
+├── README.md
+└── .gitignore
 ```
 
 ---
@@ -155,14 +159,14 @@ H2H-Minion-LogLensAI/
 ## 🚀 Installation
 
 ```bash
-git clone https://github.com/your-username/H2H-Minion-LogLensAI.git
+git clone https://github.com/nisha-07-coder/H2H-Minion--LogLensAI.git
 cd H2H-Minion-LogLensAI
 pip install -r requirements.txt
 ```
 
 ---
 
-## ▶️ Run the App
+## ▶️ Run the Application
 
 ```bash
 cd src
@@ -185,36 +189,49 @@ streamlit run app.py
 
 ---
 
-## ⏱️ Time-to-Clarity Metric
+## ⏱️ Time-to-Clarity
 
-| Without Tool | With LogLens AI |
-| ------------ | --------------- |
-| 2–3 minutes  | < 10 seconds    |
+| Scenario            | Time |
+|--------------------|------|
+| Manual Analysis     | 2–3 min |
+| Using LogLens AI    | < 10 sec |
 
 ---
 
 ## 🔐 Use Cases
 
-* SOC (Security Operations Center)
-* Incident response automation
-* Threat detection
-* SIEM enhancement
+- 🛡️ Security Operations Center (SOC)  
+- ⚡ Incident Response  
+- 🔍 Threat Detection  
+- 📊 SIEM Enhancement  
+- 🎓 Cybersecurity Learning  
 
 ---
 
-## 🔮 Future Scope
+## 🧠 Innovation Factor
 
-* ⚡ Real-time log streaming
-* 💬 Chat-based log analysis
-* 🌐 IP geolocation
-* 🤖 Advanced ML models
-* 🔗 Integration with tools like Splunk
+✔ Solves real-world cybersecurity problem  
+✔ Reduces analysis time drastically  
+✔ Converts technical logs → human insights  
+✔ Combines rule-based + AI thinking  
+✔ Not just a dashboard — a **decision system**
+
+---
+
+## 🔮 Future Enhancements
+
+- ⚡ Real-time log streaming  
+- 💬 Advanced AI chat (LLM integration)  
+- 🌍 IP geolocation visualization  
+- 🤖 ML-based anomaly detection  
+- 🔗 Integration with tools like Splunk  
 
 ---
 
 ## 🤝 Contributing
 
-Pull requests are welcome!
+Contributions are welcome!  
+Feel free to fork and submit pull requests.
 
 ---
 
@@ -223,12 +240,18 @@ Pull requests are welcome!
 MIT License
 
 ---
+
 ## 👥 Team
 
 **Team Name:** Minion++
 
-* Nikath Jahan
-* Nisha S
+- Nisha S  
+- Nikath Jahan  
 
 ---
 
+## ⭐ Show Your Support
+
+If you like this project:
+
+⭐ Star the repo  
