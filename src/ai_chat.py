@@ -1,57 +1,83 @@
 from collections import Counter
 
-def generate_response(user_input, logs, anomalies, incidents):
-    user_input = user_input.lower()
+def generate_response(query, logs, anomalies, incidents):
+    query = query.lower()
 
-    # -------- SUMMARY --------
-    if "summary" in user_input:
+    total_logs = len(logs)
+    total_anomalies = len(anomalies)
+    total_incidents = len(incidents)
+
+    # ------------------ SUMMARY ------------------
+    if any(word in query for word in ["summary", "overview", "report"]):
         return f"""
-📊 Summary:
-- Total Logs: {len(logs)}
-- Anomalies: {len(anomalies)}
-- Incidents: {len(incidents)}
+📊 SYSTEM SUMMARY
+
+• Total Logs: {total_logs}
+• Anomalies Detected: {total_anomalies}
+• Incidents Identified: {total_incidents}
+
+⚡ The system has analyzed network activity and identified potential security threats.
 """
 
-    # -------- IP DETAILS --------
-    elif "ip" in user_input:
-        ips = [log["source_ip"] for log in logs]
-        ip_counts = Counter(ips)
+    # ------------------ IP ANALYSIS ------------------
+    elif "ip" in query:
+        ips = list(set([log["source_ip"] for log in logs]))
+        return f"""
+🌐 IP ANALYSIS
 
-        result = "🌐 IP Activity:\n"
-        for ip, count in ip_counts.items():
-            result += f"- {ip}: {count} requests\n"
+Detected IP addresses:
+{', '.join(ips)}
 
-        return result
+⚠️ These IPs were involved in network activity and may require monitoring.
+"""
 
-    # -------- ANOMALIES --------
-    elif "anomaly" in user_input:
+    # ------------------ ANOMALIES ------------------
+    elif any(word in query for word in ["anomaly", "attack", "threat"]):
         if not anomalies:
-            return "✅ No anomalies detected."
+            return "✅ No anomalies detected. Network looks safe."
 
-        result = "🚨 Detected Anomalies:\n"
+        response = "🚨 THREATS DETECTED:\n\n"
         for a in anomalies:
-            result += f"- {a['type']} from {a['ip']}\n"
+            response += f"• {a['type']} from IP {a['ip']}\n"
 
-        return result
+        response += "\n⚠️ These indicate suspicious or malicious behavior."
+        return response
 
-    # -------- INCIDENTS --------
-    elif "incident" in user_input:
+    # ------------------ INCIDENTS ------------------
+    elif "incident" in query:
         if not incidents:
             return "✅ No incidents detected."
 
-        result = "🔥 Incidents:\n"
+        response = "🔥 INCIDENT ANALYSIS:\n\n"
         for i in incidents:
-            result += f"- {i['incident']} from {i['ip']}\n"
+            response += f"• {i['incident']} involving IP {i['ip']}\n"
 
-        return result
+        response += "\n⚠️ These are coordinated attack patterns."
+        return response
 
-    # -------- ATTACK ANALYSIS --------
-    elif "attack" in user_input:
-        if anomalies:
-            return "⚠️ Suspicious activity detected. Possible brute-force or port scanning."
-        else:
-            return "✅ No attack patterns detected."
+    # ------------------ RECOMMENDATION ------------------
+    elif any(word in query for word in ["fix", "solution", "prevent", "recommend"]):
+        return """
+🛡️ SECURITY RECOMMENDATIONS
 
-    # -------- DEFAULT --------
+• Block suspicious IP addresses
+• Enable firewall rules
+• Monitor repeated login attempts
+• Restrict unnecessary open ports
+• Use intrusion detection systems
+
+⚡ These actions can reduce future attacks.
+"""
+
+    # ------------------ DEFAULT ------------------
     else:
-        return "💬 Try asking: summary, anomalies, incidents, IP activity, attacks"
+        return """
+🤖 I can help you analyze logs.
+
+Try asking:
+• "Give me summary"
+• "Show anomalies"
+• "Which IP is suspicious?"
+• "Any incidents?"
+• "How to prevent attacks?"
+"""
