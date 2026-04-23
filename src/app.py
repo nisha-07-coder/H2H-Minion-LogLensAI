@@ -101,6 +101,10 @@ insights = translate_anomalies(anomalies)
 
 df = pd.DataFrame(logs)
 
+# ✅ Prevent crash if no logs
+if df.empty:
+    df = pd.DataFrame(columns=["port", "action", "category", "ip_type", "source_ip"])
+
 # ------------------ THREAT SCORE ------------------
 score = 0
 for a in anomalies:
@@ -258,19 +262,28 @@ with tab3:
 
     with col1:
         st.markdown("### Traffic by Port")
-        st.bar_chart(df["port"].value_counts())
+        if "port" in df.columns and not df.empty:
+            st.bar_chart(df["port"].value_counts())
+        else:
+            st.info("No data available")
 
         st.markdown("### Traffic by Action")
-        st.bar_chart(df["action"].value_counts())
+        if "action" in df.columns and not df.empty:
+            st.bar_chart(df["action"].value_counts())
+        else:
+            st.info("No data available")
 
     with col2:
         st.markdown("### Severity")
-        st.bar_chart(df["category"].value_counts())
+        if "category" in df.columns and not df.empty:
+            st.bar_chart(df["category"].value_counts())
+        else:
+            st.info("No data available")
 
-        if "ip_type" in df.columns:
+        if "ip_type" in df.columns and not df.empty:
             st.markdown("### IP Type")
             st.bar_chart(df["ip_type"].value_counts())
-
+            
 # ------------------ CHAT ------------------
 with tab4:
     st.markdown("### 💬 Ask LogLens AI")
