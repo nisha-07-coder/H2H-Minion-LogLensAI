@@ -24,14 +24,22 @@ def parse_log(log):
 def parse_file(file_path):
     parsed_logs = []
 
-    with open(file_path, "r") as file:
-        for line in file:
-            parsed = parse_log(line.strip())
-            if parsed:
-                parsed_logs.append(parsed)
+    # ✅ Prevent crash if file not found
+    if not os.path.exists(file_path):
+        print("⚠️ File not found:", file_path)
+        return []
+
+    try:
+        with open(file_path, "r") as file:
+            for line in file:
+                parsed = parse_log(line.strip())
+                if parsed:
+                    parsed_logs.append(parsed)
+    except Exception as e:
+        print("Error reading file:", e)
+        return []
 
     return parsed_logs
-
 
 # Main
 if __name__ == "__main__":
