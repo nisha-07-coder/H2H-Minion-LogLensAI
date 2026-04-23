@@ -18,12 +18,8 @@ st.set_page_config(page_title="LogLens AI", layout="wide")
 # ------------------ LIGHT UI CSS ------------------
 st.markdown("""
 <style>
-body {
-    background-color: #f5f7fb;
-}
-.block-container {
-    padding-top: 2rem;
-}
+body { background-color: #f5f7fb; }
+.block-container { padding-top: 2rem; }
 .card {
     background: white;
     padding: 20px;
@@ -36,6 +32,7 @@ body {
     padding: 15px;
     border-radius: 12px;
     margin: 10px 0;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.08);
 }
 .chat-user {
     text-align:right;
@@ -43,12 +40,14 @@ body {
     color:white;
     padding:10px;
     border-radius:10px;
+    margin:5px;
 }
 .chat-ai {
     text-align:left;
     background:#ffffff;
     padding:10px;
     border-radius:10px;
+    margin:5px;
     border:1px solid #e5e7eb;
 }
 .header-box {
@@ -75,30 +74,34 @@ st.markdown("""
 
 st.divider()
 
-# ------------------ LOAD DATA (FIXED) ------------------
+# ------------------ LOAD DATA ------------------
 current_dir = os.path.dirname(__file__)
 base_dir = os.path.abspath(os.path.join(current_dir, ".."))
+
+# ✅ FIXED: correct folder name (data not Data)
 file_path = os.path.join(base_dir, "Data", "sample_logs.txt")
 
-# ✅ IMPORTANT FIX: initialize logs safely
+# ✅ IMPORTANT: actually load logs
 logs = parse_file(file_path)
 
 # ------------------ PROCESS ------------------
-if logs is None:
-    logs = []
+if logs:
+    logs = enrich_logs(logs)
+    logs = classify_logs(logs)
 
-logs = enrich_logs(logs)
-logs = classify_logs(logs)
-
-anomalies = detect_anomalies(logs)
-incidents = correlate_incidents(anomalies)
-insights = translate_anomalies(anomalies)
+    anomalies = detect_anomalies(logs)
+    incidents = correlate_incidents(anomalies)
+    insights = translate_anomalies(anomalies)
+else:
+    anomalies = []
+    incidents = []
+    insights = []
 
 df = pd.DataFrame(logs)
 
 # ✅ Prevent crash if empty
 if df.empty:
-    df = pd.DataFrame(columns=["port", "action", "category", "ip_type", "source_ip"])
+    df = pd.DataFrame(columns=["timestamp","source_ip","port","action","category","ip_type"])
 
 # ------------------ THREAT SCORE ------------------
 score = 0
@@ -125,14 +128,11 @@ with col1:
         st.success(f"✅ LOW RISK ({threat_score}%)")
 
 with col2:
-    if threat_score > 70:
-        st.markdown("## 🔴 UNDER ATTACK")
-    else:
-        st.markdown("## 🟢 SYSTEM STABLE")
+    st.markdown("## 🔴 UNDER ATTACK" if threat_score > 70 else "## 🟢 SYSTEM STABLE")
 
 st.divider()
 
-# ------------------ KPI ------------------
+# ------------------ KPI CARDS ------------------
 def card(title, value):
     st.markdown(f"""
     <div class="card">
@@ -153,49 +153,135 @@ with c3:
 st.divider()
 
 # ------------------ TOP IP ------------------
-ips = [log.get("source_ip") for log in logs if "source_ip" in log]
+ips = [log["source_ip"] for log in logs]
 if ips:
     top_ip = Counter(ips).most_common(1)[0][0]
     st.warning(f"⚠️ Most Active / Suspicious IP: {top_ip}")
 
-# ------------------ ANALYTICS ------------------
-st.markdown("## 📊 Analytics")
+# ------------------ KEY FINDINGS ------------------
+st.markdown("## 🎯 Key Findings")
 
-col1, col2 = st.columns(2)
-
-with col1:
-    if "port" in df.columns:
-        st.bar_chart(df["port"].value_counts())
-    if "action" in df.columns:
-        st.bar_chart(df["action"].value_counts())
-
-with col2:
-    if "category" in df.columns:
-        st.bar_chart(df["category"].value_counts())
+if anomalies:
+    st.error(f"⚠️ Detected {len(anomalies)} suspicious activities")
+if incidents:
+    st.warning(f"🔥 {len(incidents)} coordinated attack patterns found")
+if not anomalies:
+    st.success("✅ No major threats detected")
 
 st.divider()
 
-# ------------------ CHAT ------------------
-st.markdown("### 💬 Ask LogLens AI")
+# ------------------ ATTACK TIMELINE ------------------
+st.markdown("## 🧭 Attack Timeline")
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+for log in logs:
+    color = "#ef4444" if log["action"] == "DENY" else "#10b981"
 
-for role, msg in st.session_state.messages:
-    if role == "user":
-        st.markdown(f'<div class="chat-user">{msg}</div>', unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style="
+    background:#ffffff;
+    border-left:6px solid {color};
+    padding:12px;
+    margin:10px 0;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    ">
+    ⏱ <b>{log['timestamp']}</b><br>
+    🌐 IP: {log['source_ip']}<br>
+    🔌 Port: {log['port']}<br>
+    ⚡ Action: <b>{log['action']}</b>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.divider()
+
+# ------------------ TABS ------------------
+tab1, tab2, tab3, tab4 = st.tabs([
+    "📄 Logs", "🚨 Detection", "📊 Analytics", "💬 Chat"
+])
+
+# ------------------ LOGS ------------------
+with tab1:
+    if run_live:
+        placeholder = st.empty()
+        temp_df = pd.DataFrame()
+
+        for i in range(len(df)):
+            temp_df = pd.concat([temp_df, df.iloc[[i]]])
+            placeholder.dataframe(temp_df, use_container_width=True)
+            time.sleep(0.5)
     else:
-        st.markdown(f'<div class="chat-ai">{msg}</div>', unsafe_allow_html=True)
+        st.dataframe(df, use_container_width=True)
 
-user_input = st.text_input("Ask about logs...")
+# ------------------ DETECTION ------------------
+with tab2:
+    col1, col2 = st.columns(2)
 
-if st.button("Send"):
-    if user_input:
+    with col1:
+        st.markdown("### 🚨 Anomalies")
+        if anomalies:
+            for a in anomalies:
+                st.markdown(f"""
+                <div class="detect-card" style="border-left:5px solid red;">
+                🚨 <b>{a['type']}</b><br>
+                🌐 IP: {a['ip']}<br>
+                {a['detail']}
+                </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.success("No anomalies detected")
+
+    with col2:
+        st.markdown("### 🔗 Incidents")
+        if incidents:
+            for i in incidents:
+                st.markdown(f"""
+                <div class="detect-card" style="border-left:5px solid orange;">
+                ⚠️ <b>{i['incident']}</b><br>
+                🌐 IP: {i['ip']}<br>
+                {i['detail']}
+                </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.success("No incidents detected")
+
+# ------------------ ANALYTICS ------------------
+with tab3:
+    if not df.empty:
+        st.bar_chart(df["port"].value_counts())
+        st.bar_chart(df["action"].value_counts())
+        if "category" in df.columns:
+            st.bar_chart(df["category"].value_counts())
+        if "ip_type" in df.columns:
+            st.bar_chart(df["ip_type"].value_counts())
+    else:
+        st.info("No data available")
+
+# ------------------ CHAT ------------------
+with tab4:
+    st.markdown("### 💬 Ask LogLens AI")
+
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    for role, msg in st.session_state.messages:
+        if role == "user":
+            st.markdown(f'<div class="chat-user">🧑 {msg}</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(f'<div class="chat-ai">🤖 {msg}</div>', unsafe_allow_html=True)
+
+    user_input = st.text_input("Ask about logs...")
+
+    if st.button("Send") and user_input:
         st.session_state.messages.append(("user", user_input))
 
-        response = generate_response(user_input, logs, anomalies, incidents)
+        with st.spinner("Analyzing..."):
+            response = generate_response(user_input, logs, anomalies, incidents)
 
         st.session_state.messages.append(("assistant", response))
 
-# ------------------ FOOTER ------------------
-st.markdown("---\n🔐 LogLens AI")
+st.divider()
+
+st.markdown("""
+---
+🔐 **LogLens AI** | Built for Cybersecurity Intelligence
+""")
