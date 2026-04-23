@@ -1,4 +1,4 @@
-
+<img width="1440" height="900" alt="Screenshot 2026-04-23 at 9 54 09 PM" src="https://github.com/user-attachments/assets/d07f9e9e-dfb7-4f26-9a87-06c198d1b504" />
 # 🚀 LogLens AI  
 ### 🧠 From Raw Logs to Smart Security Intelligence
 
@@ -257,15 +257,10 @@ Feel free to fork and submit pull requests.
 ---
 
 ## 🌐 Deployed Link
+The project is deployed using Streamlit Community Cloud.
 
-This project is NOT deployed on cloud platforms.
-
-The system runs locally using Streamlit:
-```
-streamlit run app.py
-
-```
----
+👉 Live Application:
+https://your-app-name.streamlit.app
 
 
 ## 📜 License
