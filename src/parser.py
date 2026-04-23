@@ -12,7 +12,7 @@ def parse_log(log):
     
     if match:
         return {
-            "timestamp": datetime.now(),  # temporary
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "source_ip": match.group(1),
             "port": int(match.group(2)),
             "action": match.group(3)
@@ -24,7 +24,6 @@ def parse_log(log):
 def parse_file(file_path):
     parsed_logs = []
 
-    # ✅ Prevent crash if file not found
     if not os.path.exists(file_path):
         print("⚠️ File not found:", file_path)
         return []
@@ -32,9 +31,15 @@ def parse_file(file_path):
     try:
         with open(file_path, "r") as file:
             for line in file:
-                parsed = parse_log(line.strip())
+                line = line.strip()
+
+                if not line:
+                    continue
+
+                parsed = parse_log(line)
                 if parsed:
                     parsed_logs.append(parsed)
+
     except Exception as e:
         print("Error reading file:", e)
         return []
