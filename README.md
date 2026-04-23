@@ -259,8 +259,7 @@ Feel free to fork and submit pull requests.
 The project is deployed using Streamlit Community Cloud.
 
 👉 Live Application:
-https://your-app-name.streamlit.app
-
+https://h2h-minion-loglensai.streamlit.app/
 
 ## 📜 License
 
